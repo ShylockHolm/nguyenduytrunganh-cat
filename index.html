@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Periodic Table</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+
+        .signature {
+            font-size: 1rem;
+            padding: 10px;
+            margin: 2rem;
+            text-align: left;
+            background-color: #79abf7c2;
+            border-radius: 10px;
+        }
+
+        .signature table {
+            width: 100%;
+            border-collapse: collapse;
+            /* Removes table borders */
+        }
+
+        .signature td:first-child {
+            max-width: 15px;
+        }
+
+        .signature td {
+            padding: 5px 0;
+            vertical-align: top;
+        }
+
+
+        #periodic-table,
+        #periodic-table-lanthanides,
+        #periodic-table-actinides {
+            display: grid;
+            grid-template-columns: repeat(18, 50px);
+            gap: 5px;
+            justify-content: center;
+
+        }
+
+        #periodic-table {
+            margin: 20px auto;
+        }
+
+        .element {
+            width: 50px;
+            height: 50px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-color: #f4f4f4;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .element-reference {
+            width: 50px;
+            height: 50px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .element:hover {
+            background-color: #e0f7fa;
+            cursor: pointer;
+        }
+
+        .symbol {
+            font-weight: bold;
+            font-size: 11px;
+        }
+
+        .name {
+            font-size: 7px;
+        }
+
+        .atomic-number {
+            font-size: 7px;
+        }
+
+        #side-menu {
+            position: fixed;
+            top: 0;
+            right: -300px;
+            width: 300px;
+            height: 90%;
+            background-color: #f4f4f4;
+            box-shadow: -2px 0 5px rgba(0, 0, 0, 0.2);
+            transition: right 0.3s ease, opacity 0.3s ease;
+            opacity: 0;
+            padding: 20px;
+            overflow-y: auto;
+            z-index: 1000;
+        }
+
+        #side-menu.visible {
+            right: 0;
+            opacity: 1;
+        }
+
+        .close-menu-container {
+            position: relative;
+            text-align: left;
+            height: 2rem;
+        }
+
+        #close-menu {
+            position: fixed;
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            background-color: rgb(126, 126, 126);
+            border-radius: 10px;
+        }
+
+        p {
+            font-size: 0.7rem !important;
+        }
+
+        #menu-content {
+            text-align: left;
+        }
+
+        .element-summary {
+            max-height: 200px;
+            overflow: auto;
+            margin-bottom: 10px;
+        }
+
+        .element-summary::-webkit-scrollbar {
+            width: 3px;
+            border-radius: 10px;
+        }
+
+        /* Track */
+        .element-summary::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        /* Handle */
+        .element-summary::-webkit-scrollbar-thumb {
+            background: #888;
+        }
+
+        /* Handle on hover */
+        .element-summary::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+
+        .element-visualization {
+            max-height: 100px;
+        }
+
+        a {
+            font-size: 0.8rem !important;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Periodic Table</h1>
+    <div id="periodic-table"></div>
+    <div id="periodic-table-lanthanides"></div>
+    <div id="periodic-table-actinides"></div>
+    <div id="side-menu" class="hidden">
+        <div class="close-menu-container">
+            <button id="close-menu">✖</button>
+        </div>
+        <div id="menu-content"></div>
+    </div>
+
+    <script src="./jquery.js"></script>
+    <script type="module">
+        // Example pTable JSON (replace this with your actual JSON object)
+        import { pTable } from "./pTable.js";
+        import { pTableUnits } from "./pTableUnits.js";
+        import { pTableProperties } from "./pTableProperties.js";
+        const global_pt = JSON.parse(pTable);
+        const global_tableContainer = document.getElementById('periodic-table');
+        const global_tableContainer_lanthanides = document.getElementById('periodic-table-lanthanides')
+        const global_tableContainer_actinides = document.getElementById('periodic-table-actinides')
+        let global_printedGroup3Period6 = false;
+        let global_printedGroup3Period7 = false;
+
+        function createElementDiv(container, element, innerHTML = '', useColor = true, allowClick = true) {
+            const elementDiv = document.createElement('div');
+            elementDiv.setAttribute('data-info', JSON.stringify(element))
+            elementDiv.classList.add('element');
+            if (allowClick == false) {
+                elementDiv.classList.add('no-click');
+            }
+            elementDiv.style.gridColumnStart = element.group;
+            elementDiv.style.gridRowStart = element.period;
+            elementDiv.innerHTML = innerHTML;
+            if (useColor == true) {
+                elementDiv.style.backgroundColor = '#' + element.cpk_hex;
+            }
+            container.appendChild(elementDiv);
+        }
+
+        function createLanthanidesReference() {
+            const asteriskDiv = document.createElement('div');
+            asteriskDiv.classList.add('element-reference');
+            asteriskDiv.style.gridColumnStart = 3;
+            asteriskDiv.style.gridRowStart = 1;
+            asteriskDiv.innerHTML = `<div>*</div>`;
+            global_tableContainer_lanthanides.appendChild(asteriskDiv);
+        }
+
+        function createElementDivLanthanides(container, element, innerHTML = '') {
+            const elementDiv = document.createElement('div');
+            elementDiv.setAttribute('data-info', JSON.stringify(element))
+            elementDiv.classList.add('element');
+            elementDiv.style.gridColumnStart = element.atomic_number - 53;
+            elementDiv.style.gridRowStart = 1;
+            elementDiv.innerHTML = innerHTML;
+            elementDiv.style.backgroundColor = '#' + element.cpk_hex;
+            container.appendChild(elementDiv);
+        }
+
+        function createActinidesReference() {
+            const asteriskDiv = document.createElement('div');
+            asteriskDiv.classList.add('element-reference');
+            asteriskDiv.style.gridColumnStart = 3;
+            asteriskDiv.style.gridRowStart = 1;
+            asteriskDiv.innerHTML = `<div>**</div>`;
+            global_tableContainer_actinides.appendChild(asteriskDiv);
+        }
+
+        function createElementDivActinides(container, element, innerHTML = '') {
+            const elementDiv = document.createElement('div');
+            elementDiv.setAttribute('data-info', JSON.stringify(element))
+            elementDiv.classList.add('element');
+            elementDiv.style.gridColumnStart = element.atomic_number - 85;
+            elementDiv.style.gridRowStart = 1;
+            elementDiv.innerHTML = innerHTML;
+            elementDiv.style.backgroundColor = '#' + element.cpk_hex;
+            container.appendChild(elementDiv);
+        }
+
+        for (let i = 0; i < global_pt.length; i++) {
+            const element = global_pt[i];
+            if (element.group == 3 && element.period == 6) {
+                if (global_printedGroup3Period6 == false) {
+                    createElementDiv(global_tableContainer, element, `
+                        <div>
+                            <div class="atomic-number">57-71</div>
+                            <div class="name">*</div>
+                            <div class="name">Lanthanide</div>
+                        </div>
+                    `, false, false);
+                    createLanthanidesReference();
+                    global_printedGroup3Period6 = true;
+                }
+                createElementDivLanthanides(global_tableContainer_lanthanides, element, `
+                        <div class="atomic-number">${element.atomic_number}</div>
+                        <div class="symbol">${element.symbol}</div>
+                        <div class="name">${element.name}</div>
+                `);
+            } else if (element.group == 3 && element.period == 7) {
+                if (global_printedGroup3Period7 == false) {
+                    createElementDiv(global_tableContainer, element, `
+                        <div>
+                            <div class="atomic-number">89-103</div>
+                            <div class="name">**</div>
+                            <div class="name">Actinides</div>
+                        </div>
+                    `, false, false);
+                    createActinidesReference();
+                    global_printedGroup3Period7 = true;
+                }
+                createElementDivActinides(global_tableContainer_actinides, element, `
+                        <div class="atomic-number">${element.atomic_number}</div>
+                        <div class="symbol">${element.symbol}</div>
+                        <div class="name">${element.name}</div>
+                `);
+            } else {
+                createElementDiv(global_tableContainer, element, `
+                    <div class="atomic-number">${element.atomic_number}</div>
+                    <div class="symbol">${element.symbol}</div>
+                    <div class="name">${element.name}</div>
+                `);
+            }
+
+        }
+        $(document).ready(function () {
+            $(document).on('click', '.element', function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                if ($(this).hasClass('no-click')) {
+                    return;
+                }
+                const elementSymbol = $(this).find('.symbol').text();
+                const elementName = $(this).find('.name').text();
+                const atomicNumber = $(this).find('.atomic-number').text();
+                const elementInfo = $(this).data('info');
+                $('#menu-content').html(`
+                    <h2>${elementName} (${elementSymbol})</h2>
+                    
+                    <img class="element-visualization" src="${'./elements/' + atomicNumber + '.jpg'}" alt="${'visual-' + elementName}"/>
+                    <p>Atomic number: <strong>${atomicNumber}</strong></p>
+                    <p>Electron configuration: <strong>${elementInfo['electron_configuration_semantic']}</strong> </p>
+                    <p>Atomic mass: <strong>${elementInfo['atomic_mass']}</strong> <small style="font-style:italic">(amu)</small></p>
+                    <p>Group: <strong>${elementInfo['group']}</strong> Period: <strong>${elementInfo['period']}</strong></p>
+                    <strong>Element summary:</strong>
+                    <div class="element-summary">
+                        ${elementInfo['summary']}
+                    </div>
+                    <div>
+                        <a target="_blank" href="${elementInfo['source']}">wiki - reference</a>
+                    </div>
+                `);
+
+                $('#side-menu').addClass('visible');
+            })
+
+            $('#close-menu').on('click', function () {
+                $('#side-menu').removeClass('visible');
+            });
+
+            $(document).on('click', 'body:not(.element)', function (event) {
+                $('#side-menu').removeClass('visible');
+            })
+        })
+    </script>
+
+
+    <div class="signature">
+        <table>
+            <tr>
+                <td>Author:</td>
+                <td><a><strong>Nguyễn Duy Trung Anh</strong></td>
+            </tr>
+            <tr>
+                <td>Class:</td>
+                <td><strong>10A5</strong></td>
+            </tr>
+            <tr>
+                <td>School:</td>
+                <td><strong>Nguyễn Tất Thành</strong></td>
+            </tr>
+            <tr>
+                <td>Date:</td>
+                <td><strong>20/11/2024</strong></td>
+            </tr>
+            <tr>
+                <td>Facebook:</td>
+                <td><strong><a target="_blank" href="https://www.facebook.com/Shylock321">Trung Anh's Facebook</a></strong></td>
+            </tr>
+        </table>
+    </div>
+
+</body>
+
+</html>
