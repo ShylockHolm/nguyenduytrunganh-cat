@@ -35,15 +35,20 @@
             vertical-align: top;
         }
 
-
         #periodic-table,
         #periodic-table-lanthanides,
         #periodic-table-actinides {
             display: grid;
             grid-template-columns: repeat(18, 50px);
             gap: 5px;
-            justify-content: center;
+        }
 
+        @media (min-width: 1000px) {
+            #periodic-table,
+            #periodic-table-lanthanides,
+            #periodic-table-actinides {
+                justify-content: center;
+            }
         }
 
         #periodic-table {
