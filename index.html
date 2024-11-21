@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Periodic Table</title>
+    <title>Bảng tuần hoàn hóa học</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -12,7 +12,7 @@
         }
 
         .signature {
-            font-size: 1rem;
+            font-size: 1.1rem;
             padding: 10px;
             margin: 2rem;
             text-align: left;
@@ -177,7 +177,7 @@
 
 <body>
 
-    <h1>Periodic Table</h1>
+    <h1>BẢNG TUẦN HOÀN HÓA HỌC - NDTrungAnh</h1>
     <div id="periodic-table"></div>
     <div id="periodic-table-lanthanides"></div>
     <div id="periodic-table-actinides"></div>
@@ -315,16 +315,16 @@
                     <h2>${elementName} (${elementSymbol})</h2>
                     
                     <img class="element-visualization" src="${'./elements/' + atomicNumber + '.jpg'}" alt="${'visual-' + elementName}"/>
-                    <p>Atomic number: <strong>${atomicNumber}</strong></p>
-                    <p>Electron configuration: <strong>${elementInfo['electron_configuration_semantic']}</strong> </p>
-                    <p>Atomic mass: <strong>${elementInfo['atomic_mass']}</strong> <small style="font-style:italic">(amu)</small></p>
-                    <p>Group: <strong>${elementInfo['group']}</strong> Period: <strong>${elementInfo['period']}</strong></p>
-                    <strong>Element summary:</strong>
+                    <p>Số hiệu nguyên tử: <strong>${atomicNumber}</strong></p>
+                    <p>Cấu hình nguyên tử: <strong>${elementInfo['electron_configuration_semantic']}</strong> </p>
+                    <p>Nguyên tử khối: <strong>${elementInfo['atomic_mass']}</strong> <small style="font-style:italic">(amu)</small></p>
+                    <p>Nhóm: <strong>${elementInfo['group']}</strong> Chu kì: <strong>${elementInfo['period']}</strong></p>
+                    <strong>Giới thiệu nguyên tố:</strong>
                     <div class="element-summary">
                         ${elementInfo['summary']}
                     </div>
                     <div>
-                        <a target="_blank" href="${elementInfo['source']}">wiki - reference</a>
+                        <a target="_blank" href="${elementInfo['source']}">(Thông tin Wikipedia)</a>
                     </div>
                 `);
 
@@ -345,24 +345,28 @@
     <div class="signature">
         <table>
             <tr>
-                <td>Author:</td>
+                <td>Người làm:</td>
                 <td><a><strong>Nguyễn Duy Trung Anh</strong></td>
             </tr>
             <tr>
-                <td>Class:</td>
+                <td>Lớp:</td>
                 <td><strong>10A5</strong></td>
             </tr>
             <tr>
-                <td>School:</td>
+                <td>Trường:</td>
                 <td><strong>Nguyễn Tất Thành</strong></td>
             </tr>
             <tr>
-                <td>Date:</td>
+                <td>Ngày làm:</td>
                 <td><strong>20/11/2024</strong></td>
             </tr>
             <tr>
                 <td>Facebook:</td>
-                <td><strong><a target="_blank" href="https://www.facebook.com/Shylock321">Trung Anh's Facebook</a></strong></td>
+                <td><strong><a target="_blank" href="https://www.facebook.com/Shylock321">Facebook của TrAnh</a></strong></td>
+            </tr>
+            <tr>
+                <td>Địa chỉ code:</td>
+                <td><strong><a target="_blank" href="https://github.com/ShylockHolm/ndta_periodic_table">Github của TrAnh</a></strong></td>
             </tr>
         </table>
     </div>
