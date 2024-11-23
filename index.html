@@ -352,21 +352,18 @@
                         ⠀⠀⠀⠀⠀⠀⠀⠈⠛⠻⠿⠿⠿⠿⠋⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀<\p>
                 `);
 
-                $('#side-menu').addClass('visible');
+            $('#side-menu').addClass('visible');
             })
 
             $('#close-menu').on('click', function () {
-                $('#side-menu').removeClass('visible');
-            });
+            $('#side-menu').removeClass('visible');
+        });
 
-            $(document).on('click', 'body:not(.element)', function (event) {
-                $('#side-menu').removeClass('visible');
-            })
-            $(document).on('click', function (event) {
-            if (!$(event.target).closest('#side-menu').length) {
+        $(document).on('click', function (event) {
+            if (!$(event.target).closest('#side-menu').length && !$(event.target).is('#side-menu')) {
                 $('#side-menu').removeClass('visible');
             }
-            });
+        });
         })
     </script>
 
