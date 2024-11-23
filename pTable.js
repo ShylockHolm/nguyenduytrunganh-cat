@@ -11489,13 +11489,16 @@ const pTable = JSON.stringify([
         "atomic_mass": 315,
         "atomic_number": 119,
         "boiling_point": 630,
+        "melting_point": 69420 + 273.15,
         "cpk_hex": "fd0014",
         "discovered": {
-            "by": "GSI Helmholtz Centre for Heavy Ion Research"
+            "year": "2025",
+            "by": "GSI Helmholtz Centre for Heavy Ion Research",
+            "location": "Germany"
         },
         "electron_affinity": 63.87,
         "electron_configuration": "1s² 2s² 2p⁶ 3s² 3p⁶ 4s² 3d¹⁰ 4p⁶ 5s² 4d¹⁰ 5p⁶ 6s² 4f¹⁴ 5d¹⁰ 6p⁶ 7s² 5f¹⁴ 6d¹⁰ 7p⁶ 8s¹",
-        "electron_configuration_semantic": "*[Uuo] 8s¹",
+        "electron_configuration_semantic": "1s² 2s² 2p⁶ 3s² 3p⁶ 4s² 3d¹⁰ 4p⁶ 5s² 4d¹⁰ 5p⁶ 6s² 4f¹⁴ 5d¹⁰ 6p⁶ 7s² 5f¹⁴ 6d¹⁰ 7p⁶ 8s¹",
         "electrons_per_shell": [
             2,
             8,
