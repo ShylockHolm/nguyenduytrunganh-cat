@@ -1,406 +1,264 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bảng tuần hoàn hóa học</title>
+    <title>Welcome to ndta website</title>
     <style>
-        body {
+        body, html {
+            margin: 0;
+            padding: 0;
             font-family: Arial, sans-serif;
-            text-align: center;
         }
 
-        .signature {
-            font-size: 1.1rem;
-            padding: 10px;
-            margin: 2rem;
-            text-align: left;
-            background-color: #79abf7c2;
-            border-radius: 20px;
-        }
-
-        .signature table {
+        .top-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
             width: 100%;
-            border-collapse: collapse;
+            background-color: #333;
+            color: white;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 10px 0;
+            z-index: 100;
+            border-radius: 1px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 10);
         }
 
-        .signature td:first-child {
-            max-width: 500px;
+        .top-bar button {
+            background-color: #555;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
         }
 
-        .signature td {
-            padding: 5px 0;
-            vertical-align: top;
+        .top-bar button:hover {
+            background-color: #777;
         }
 
-        #periodic-table,
-        #periodic-table-lanthanides,
-        #periodic-table-actinides {
-            display: grid;
-            grid-template-columns: repeat(18, 50px);
-            gap: 5px;
+        .banner {
+            position: relative;
+            margin-top: 140px; 
+            height: 70vh;
+            background: url('./images/sky.jpg') no-repeat center center;
+            background-size: cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: rgb(255, 255, 255);
+            text-align: center;
+            font-size: 3.5rem;
+            font-weight: bold;
+            border: 20px solid #ffffff;
+            border-radius: 200px; 
+            box-shadow: 0 2px 1000px rgb(0, 0, 0);
+            overflow: hidden;
         }
 
-        @media (min-width: 1000px) {
-            #periodic-table,
-            #periodic-table-lanthanides,
-            #periodic-table-actinides {
-                justify-content: center;
+
+        .banner::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4); 
+            z-index: 1;
+        }
+
+        .banner-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .banner {
+            opacity: 1;
+            transition: opacity 1.5s;
+        }
+
+        .faded {
+            opacity: 0;
+            overflow: hidden;
+        }
+
+        .content {
+            padding: 100px;
+            background: #ebe0f9;
+            min-height: 500vh;
+            margin-top: 110px; 
+            border: 30px solid #000000; 
+            border-radius: 100px; 
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
+        }
+
+        .cat-container {
+            position: absolute;
+            top: -100px; 
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+        }
+
+        .falling-cat {
+            width: 500px;
+            display: none; 
+            position: absolute; 
+            top: -200px; 
+            left: 50%;
+            transform: translateX(-50%);
+            animation-duration: 2s;
+            animation-timing-function: ease-in-out;
+        }
+
+        /* Apply the fall animation */
+        .falling-cat.falling {
+            animation: fall 2s ease-in-out forwards;
+        }
+
+        /* Apply the run-up animation */
+        .falling-cat.running-up {
+            animation: runUp 2s ease-in-out forwards;
+        }
+
+        /* Animation for falling */
+        @keyframes fall {
+            0% {
+                top: -200px; 
+            }
+            100% {
+                top: 75vh; 
             }
         }
 
-        #periodic-table {
-            margin: 20px auto;
-        }
-
-        .element {
-            width: 50px;
-            height: 50px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            background-color: #f4f4f4;
-            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
-        }
-
-        .element-reference {
-            width: 50px;
-            height: 50px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .element:hover {
-            background-color: #ffffff;
-            cursor: pointer;
-        }
-
-        .symbol {
-            font-weight: bold;
-            font-size: 11px;
-        }
-
-        .name {
-            font-size: 7px;
-        }
-
-        .atomic-number {
-            font-size: 7px;
-        }
-
-        #side-menu {
-            position: fixed;
-            top: 0;
-            right: -500px;
-            width: 300px;
-            height: 90%;
-            background-color: #ffffff;
-            box-shadow: -2px 0 5px rgba(0, 0, 0, 0.2);
-            transition: right 0.3s ease, opacity 0.3s ease;
-            opacity: 0;
-            padding: 20px;
-            overflow-y: auto;
-            z-index: 1000;
-        }
-
-        #side-menu.visible {
-            right: 0;
-            opacity: 1;
-        }
-
-        .close-menu-container {
-            position: relative;
-            text-align: left;
-            height: 2rem;
-        }
-
-        #close-menu {
-            position: fixed;
-            background: none;
-            border: none;
-            font-size: 20px;
-            cursor: pointer;
-            background-color: rgb(126, 126, 126);
-            border-radius: 10px;
-        }
-
-        p {
-            font-size: 0.7rem !important;
-        }
-
-        #menu-content {
-            text-align: left;
-        }
-
-        .element-summary {
-            max-height: 200px;
-            overflow: auto;
-            margin-bottom: 10px;
-        }
-
-        .element-summary::-webkit-scrollbar {
-            width: 3px;
-            border-radius: 10px;
-        }
-
-        /* Track */
-        .element-summary::-webkit-scrollbar-track {
-            background: #b7bcff;
-        }
-
-        /* Handle */
-        .element-summary::-webkit-scrollbar-thumb {
-            background: #888;
-        }
-
-        .element-summary::-webkit-scrollbar-thumb:hover {
-            background: #555;
-        }
-
-        .element-visualization {
-            max-height: 100px;
-        }
-
-        a {
-            font-size: 0.8rem !important;
+        /* Animation for running back up */
+        @keyframes runUp {
+            0% {
+                top: 75vh; 
+            }
+            100% {
+                top: -200px; 
+            }
         }
     </style>
 </head>
-
 <body>
-    <h1>BẢNG TUẦN HOÀN HÓA HỌC - NDTrungAnh</h1>
-    <div id="periodic-table"></div>
-    <div id="periodic-table-lanthanides"></div>
-    <div id="periodic-table-actinides"></div>
-    <div id="side-menu" class="hidden">
-        <div class="close-menu-container">
-            <button id="close-menu">✖</button>
+    <div class="top-bar">
+        <button onclick=>Home</button>
+        <button onclick=>About</button>
+        <button onclick="alert('Projects button clicked')">Projects</button>
+        <button onclick="alert('Contact button clicked')">Contact</button>
+        <button onclick=>Cat</button>
+    </div>
+
+    <div class="cat-container">
+        <img src="./images/cat.png" alt="Falling Cat" class="falling-cat" id="falling-cat">
+    </div>
+
+    <div class="banner" id="banner">
+        <div class="banner-content">
+            Nguyen Duy Trung Anh website
         </div>
-        <div id="menu-content"></div>
     </div>
 
-    <script src="./jquery.js"></script>
-    <script type="module">
-        import { pTable } from "./pTable.js";
-        const global_pt = JSON.parse(pTable);
-        const global_tableContainer = document.getElementById('periodic-table');
-        const global_tableContainer_lanthanides = document.getElementById('periodic-table-lanthanides')
-        const global_tableContainer_actinides = document.getElementById('periodic-table-actinides')
-        let global_printedGroup3Period6 = false;
-        let global_printedGroup3Period7 = false;
+    <div class="content">
+        <h1><strong>About: </strong></h1>
+        <p>
+            Hewwo =33 me name are Turgn Ahn (Shylock) and me lick cat ^-^
+        </p>
+        <p>
+            bye bye lov u 3000 !!!!
+        </p>
+        <p>
+            meow ~
+        </p>
+    </div>
 
-        function createElementDiv(container, element, innerHTML = '', useColor = true, allowClick = true) {
-            const elementDiv = document.createElement('div');
-            elementDiv.setAttribute('data-info', JSON.stringify(element))
-            elementDiv.classList.add('element');
-            if (allowClick == false) {
-                elementDiv.classList.add('no-click');
-            }
-            elementDiv.style.gridColumnStart = element.group;
-            elementDiv.style.gridRowStart = element.period;
-            elementDiv.innerHTML = innerHTML;
-            if (useColor == true) {
-                elementDiv.style.backgroundColor = '#' + element.cpk_hex;
-            }
-            container.appendChild(elementDiv);
-        }
-
-        function createLanthanidesReference() {
-            const asteriskDiv = document.createElement('div');
-            asteriskDiv.classList.add('element-reference');
-            asteriskDiv.style.gridColumnStart = 3;
-            asteriskDiv.style.gridRowStart = 1;
-            asteriskDiv.innerHTML = `<div>*</div>`;
-            global_tableContainer_lanthanides.appendChild(asteriskDiv);
-        }
-
-        function createElementDivLanthanides(container, element, innerHTML = '') {
-            const elementDiv = document.createElement('div');
-            elementDiv.setAttribute('data-info', JSON.stringify(element))
-            elementDiv.classList.add('element');
-            elementDiv.style.gridColumnStart = element.atomic_number - 53;
-            elementDiv.style.gridRowStart = 1;
-            elementDiv.innerHTML = innerHTML;
-            elementDiv.style.backgroundColor = '#' + element.cpk_hex;
-            container.appendChild(elementDiv);
-        }
-
-        function createActinidesReference() {
-            const asteriskDiv = document.createElement('div');
-            asteriskDiv.classList.add('element-reference');
-            asteriskDiv.style.gridColumnStart = 3;
-            asteriskDiv.style.gridRowStart = 1;
-            asteriskDiv.innerHTML = `<div>**</div>`;
-            global_tableContainer_actinides.appendChild(asteriskDiv);
-        }
-
-        function createElementDivActinides(container, element, innerHTML = '') {
-            const elementDiv = document.createElement('div');
-            elementDiv.setAttribute('data-info', JSON.stringify(element))
-            elementDiv.classList.add('element');
-            elementDiv.style.gridColumnStart = element.atomic_number - 85;
-            elementDiv.style.gridRowStart = 1;
-            elementDiv.innerHTML = innerHTML;
-            elementDiv.style.backgroundColor = '#' + element.cpk_hex;
-            container.appendChild(elementDiv);
-        }
-
-        for (let i = 0; i < global_pt.length; i++) {
-            const element = global_pt[i];
-            if (element.group == 3 && element.period == 6) {
-                if (global_printedGroup3Period6 == false) {
-                    createElementDiv(global_tableContainer, element, `
-                        <div>
-                            <div class="atomic-number">57-71</div>
-                            <div class="name">*</div>
-                            <div class="name">Lanthanide</div>
-                        </div>
-                    `, false, false);
-                    createLanthanidesReference();
-                    global_printedGroup3Period6 = true;
+    <script>
+        // Automatic scroll to section
+        window.addEventListener('scroll', () => {
+            const banner = document.getElementById('banner');
+            
+            if (window.scrollY > 350) {
+                banner.classList.add('faded');
+                if (!banner.classList.contains('scrolled')) {
+                    banner.classList.add('scrolled');
+                    window.scrollBy({ top: 480, behavior: 'smooth' }); 
                 }
-                createElementDivLanthanides(global_tableContainer_lanthanides, element, `
-                        <div class="atomic-number">${element.atomic_number}</div>
-                        <div class="symbol">${element.symbol}</div>
-                        <div class="name">${element.name}</div>
-                `);
-            } else if (element.group == 3 && element.period == 7) {
-                if (global_printedGroup3Period7 == false) {
-                    createElementDiv(global_tableContainer, element, `
-                        <div>
-                            <div class="atomic-number">89-103</div>
-                            <div class="name">**</div>
-                            <div class="name">Actinides</div>
-                        </div>
-                    `, false, false);
-                    createActinidesReference();
-                    global_printedGroup3Period7 = true;
-                }
-                createElementDivActinides(global_tableContainer_actinides, element, `
-                        <div class="atomic-number">${element.atomic_number}</div>
-                        <div class="symbol">${element.symbol}</div>
-                        <div class="name">${element.name}</div>
-                `);
             } else {
-                createElementDiv(global_tableContainer, element, `
-                    <div class="atomic-number">${element.atomic_number}</div>
-                    <div class="symbol">${element.symbol}</div>
-                    <div class="name">${element.name}</div>
-                `);
-            }
-
-        }
-        $(document).ready(function () {
-            $(document).on('click', '.element', function (e) {
-                e.preventDefault();
-                e.stopPropagation();
-                if ($(this).hasClass('no-click')) {
-                    return;
-                }
-                const elementSymbol = $(this).find('.symbol').text();
-                const elementName = $(this).find('.name').text();
-                const atomicNumber = $(this).find('.atomic-number').text();
-                const elementInfo = $(this).data('info');
-                $('#menu-content').html(`
-                    <h2>${elementName} (${elementSymbol})</h2>
-                    
-                    <img class="element-visualization" src="${'./elements/' + atomicNumber + '.jpg'}" alt="${'visual-' + elementName}"/>
-                    <p>Số hiệu nguyên tử: <strong>${atomicNumber}</strong></p>
-                    <p>Cấu hình electron nguyên tử: <strong>${elementInfo['electron_configuration_semantic']}</strong> </p>
-                    <p>Nguyên tử khối: <strong>${elementInfo['atomic_mass']}</strong> <small style="font-style:italic">(amu)</small></p>
-                    <p>Nhóm: <strong>${elementInfo['group']}</strong> Chu kì: <strong>${elementInfo['period']}</strong></p>
-                    <p>Nhiệt độ sôi: <strong>${elementInfo['boiling_point']-273.15}</strong> <small style="font-style:italic">(℃)</small></p>
-                    <p>Nhiệt tan chảy: <strong>${elementInfo['melting_point']-273.15}</strong> <small style="font-style:italic">(℃)</small></p>
-                    <p>Các % đồng vị: <strong>${elementInfo['isotopic_abundances']}</strong></p>
-                    <strong>Nguyên tố được khám phá:</strong>
-                    <div>
-                        <p class="no-wrap">- Năm: <strong>${elementInfo['discovered']['year']}</strong></p>
-                        <p class="no-wrap">- Bởi: <strong>${elementInfo['discovered']['by']}</strong></p>
-                        <p class="no-wrap">- Quốc gia: <strong>${elementInfo['discovered']['location']}</strong></p>
-                    </div>
-                    <strong>Giới thiệu nguyên tố:</strong>
-                    <div class="element-summary">
-                        ${elementInfo['summary']}
-                    </div>
-                    <div>
-                        <a target="_blank" href="${elementInfo['source']}">(Thông tin Wikipedia)</a>
-                    </div>
-                    <p>⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⣤⣤⣤⣤⣤⣶⣦⣤⣄⡀⠀⠀⠀⠀⠀⠀⠀⠀ 
-                        ⠀⠀⠀⠀⠀⠀⠀⠀⢀⣴⣿⡿⠛⠉⠙⠛⠛⠛⠛⠻⢿⣿⣷⣤⡀⠀⠀⠀⠀⠀ 
-                        ⠀⠀⠀⠀⠀⠀⠀⠀⣼⣿⠋⠀⠀⠀⠀⠀⠀⠀⢀⣀⣀⠈⢻⣿⣿⡄⠀⠀⠀⠀ 
-                        ⠀⠀⠀⠀⠀⠀⠀⣸⣿⡏⠀⠀⠀⣠⣶⣾⣿⣿⣿⠿⠿⠿⢿⣿⣿⣿⣄⠀⠀⠀ 
-                        ⠀⠀⠀⠀⠀⠀⠀⣿⣿⠁⠀⠀⢰⣿⣿⣯⠁⠀⠀⠀⠀⠀⠀⠀⠈⠙⢿⣷⡄⠀ 
-                        ⠀⠀⣀⣤⣴⣶⣶⣿⡟⠀⠀⠀⢸⣿⣿⣿⣆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣷⠀ 
-                        ⠀⢰⣿⡟⠋⠉⣹⣿⡇⠀⠀⠀⠘⣿⣿⣿⣿⣷⣦⣤⣤⣤⣶⣶⣶⣶⣿⣿
-                        ⠀⢸⣿⡇⠀⠀⣿⣿⡇⠀⠀⠀⠀⠹⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠀ 
-                        ⠀⣸⣿⡇⠀⠀⣿⣿⡇⠀⠀⠀⠀⠀⠉⠻⠿⣿⣿⣿⣿⡿⠿⠿⠛⢻⣿⡇⠀⠀ 
-                        ⠀⣿⣿⠁⠀⠀⣿⣿⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⣧⠀⠀ 
-                        ⠀⣿⣿⠀⠀⠀⣿⣿⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⣿⠀⠀ 
-                        ⠀⣿⣿⠀⠀⠀⣿⣿⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⣿⠀⠀ 
-                        ⠀⢿⣿⡆⠀⠀⣿⣿⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⡇⠀⠀ 
-                        ⠀⠸⣿⣧⡀⠀⣿⣿⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⠃⠀⠀ 
-                        ⠀⠀⠛⢿⣿⣿⣿⣿⣇⠀⠀⠀⠀⠀⣰⣿⣿⣷⣶⣶⣶⣶⠶⢠⣿⣿⠀⠀⠀ 
-                        ⠀⠀⠀⠀⠀⠀⠀⣿⣿⠀⠀⠀⠀⠀⣿⣿⡇⠀⣽⣿⡏⠁⠀⠀⢸⣿⡇⠀⠀⠀ 
-                        ⠀⠀⠀⠀⠀⠀⠀⣿⣿⠀⠀⠀⠀⠀⣿⣿⡇⠀⢹⣿⡆⠀⠀⠀⣸⣿⠇⠀⠀⠀ 
-                        ⠀⠀⠀⠀⠀⠀⠀⢿⣿⣦⣄⣀⣠⣴⣿⣿⠁⠀⠈⠻⣿⣿⣿⣿⡿⠏⠀⠀⠀⠀ 
-                        ⠀⠀⠀⠀⠀⠀⠀⠈⠛⠻⠿⠿⠿⠿⠋⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀<\p>
-                `);
-
-            $('#side-menu').addClass('visible');
-            })
-
-            $('#close-menu').on('click', function () {
-            $('#side-menu').removeClass('visible');
-        });
-
-        $(document).on('click', function (event) {
-            if (!$(event.target).closest('#side-menu').length && !$(event.target).is('#side-menu')) {
-                $('#side-menu').removeClass('visible');
+                banner.classList.remove('faded');
+                banner.classList.remove('scrolled'); 
             }
         });
-        })
+
+        // About and Home button click 
+        document.querySelector('.top-bar button:nth-child(2)').addEventListener('click', () => {
+            const content = document.querySelector('.content');
+            const offset = 200;
+            const contentPosition = content.offsetTop - offset;
+            window.scrollTo({ top: contentPosition, behavior: 'smooth' });
+        });
+        document.querySelector('.top-bar button:nth-child(1)').addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        let isAnimating = false; // State lock
+        // Trigger the cat falling animation when the button is clicked
+        document.querySelector('.top-bar button:nth-child(5)').addEventListener('click', () => {
+            const cat = document.getElementById('falling-cat');
+
+            if (isAnimating) return; // Prevent triggering while animation is in progress
+
+            isAnimating = true; // Lock state
+            cat.style.display = 'block';
+            cat.style.pointerEvents = 'none'; // Disable clicks temporarily
+            cat.classList.remove('falling', 'running-up'); // Reset animations
+
+            // Use a small timeout to ensure the class removal is registered
+            setTimeout(() => {
+                cat.classList.add('falling'); // Start falling animation
+            }, 50);
+        });
+
+        // Trigger the cat running back up or falling again when clicked
+        document.getElementById('falling-cat').addEventListener('click', () => {
+            const cat = document.getElementById('falling-cat');
+
+            if (isAnimating) return; // Prevent triggering while animation is in progress
+
+            isAnimating = true; // Lock state
+
+            if (cat.classList.contains('falling')) {
+                // If falling, switch to running up
+                cat.classList.remove('falling');
+                setTimeout(() => {
+                    cat.classList.add('running-up');
+                    cat.style.pointerEvents = 'none'; // Disable clicks during the animation
+                }, 50);
+            } else if (cat.classList.contains('running-up')) {
+                // If running up, switch to falling
+                cat.classList.remove('running-up');
+                setTimeout(() => {
+                    cat.classList.add('falling');
+                    cat.style.pointerEvents = 'none'; // Disable clicks during the animation
+                }, 50);
+            }
+        });
+
+        // Re-enable clicks after the animation ends
+        document.getElementById('falling-cat').addEventListener('animationend', () => {
+            const cat = document.getElementById('falling-cat');
+            isAnimating = false; // Unlock state
+            cat.style.pointerEvents = 'auto'; // Enable clicks again
+        });
+
+
     </script>
-
-
-    <div class="signature">
-        <table>
-            <tr>
-                <td>Người làm:</td>
-                <td><a><strong>Nguyễn Duy Trung Anh</strong></td>
-            </tr>
-            <tr>
-                <td>Lớp:</td>
-                <td><strong>10A5</strong></td>
-            </tr>
-            <tr>
-                <td>Trường:</td>
-                <td><strong>THCS & THPT Nguyễn Tất Thành</strong></td>
-            </tr>
-            <tr>
-                <td>Ngày làm:</td>
-                <td><strong>20/11/2024</strong></td>
-            </tr>
-            <tr>
-                <td>Facebook:</td>
-                <td><strong><a target="_blank" href="https://www.facebook.com/Shylock321">Facebook của TrAnh</a></strong></td>
-            </tr>
-            <tr>
-                <td>Địa chỉ code:</td>
-                <td><strong><a target="_blank" href="https://github.com/ShylockHolm/ndta_periodic_table">Github của TrAnh</a></strong></td>
-            </tr>
-            <tr>
-                <td>Thành viên đóng góp:</td>
-                <td><small>Hà Phương, Hưng Khang, Linh Chi, Trung Quân, Quỳnh Như, Tâm An, Trang Tracy, Văn Đạt, Đức Vượng</small></td>
-            </tr>
-        </table>
-    </div>
-
 </body>
-
 </html>
