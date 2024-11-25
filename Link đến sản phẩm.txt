@@ -1,2 +1,0 @@
-app: https://ndta-pt.vercel.app/
-code: https://github.com/ShylockHolm/ndta_periodic_table
